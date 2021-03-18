@@ -28,6 +28,10 @@ VALUES ('РТК', 5, 'СРОЧНО',55,'New','A.Berkut','V.Belova','2015/03/01',
 UPDATE Tasks
 Set WhoIsDoing = 'S.Petrova'
 where WhoIsDoing is NULL;
+
+INSERT INTO Tasks(Project, TaskID, Header, Priority, Status,Creator, WhoIsDoing, StartDate, Deadline, Assessment,SpentTime)
+VALUES ('МВД-Онлайн',14,'task', 15 ,'Closed','A.Berkut','A.Kasatkin','2015/05/13','2016/11/11', 39 , 55);
+
 --вложенный
 select whoisdoing,
 (select sum(assessment - spenttime) from tasks inrmore
@@ -43,9 +47,9 @@ select whoisdoing,
 from tasks group by whoisdoing;
 
 --2.4
-SELECT creator, whoisdoing
-FROM tasks
-GROUP BY creator, whoisdoing;
+--SELECT creator, whoisdoing
+--FROM tasks
+--GROUP BY creator, whoisdoing;
 
 (select creator cr, whoisdoing wsd from tasks where creator > whoisdoing) union
 (select creator cr,  whoisdoing  wsd from tasks where creator < whoisdoing) union
@@ -54,11 +58,6 @@ GROUP BY creator, whoisdoing;
 --2.5
 SELECT login, length(login) FROM users WHERE
 length(login) = (SELECT max(length(login)) FROM users);
-
-SELECT login, length(login)
-FROM users
-ORDER BY length(login) DESC
-LIMIT 1;
 
 --2.6
 -- pg_column_size(column) - Число байт, необходимых для хранения заданного значения
@@ -84,7 +83,8 @@ SELECT login, max(priority)
 FROM users,
      tasks
 WHERE tasks.whoisdoing = users.login
-GROUP BY login, whoisdoing;
+GROUP BY login;
+--group by whoisdoing - лишняя работа, тк уже сделали where
 
 --2.8
 UPDATE Tasks
@@ -94,6 +94,12 @@ where assessment is NULL;
 SELECT whoisdoing, sum(assessment) FROM tasks
 	WHERE (assessment >= (SELECT avg(assessment) FROM tasks)) AND (status != 'Closed')
 	GROUP BY whoisdoing;
+
+SELECT whoisdoing, sum(assessment)
+    FROM tasks
+	GROUP BY whoisdoing, assessment, status
+    HAVING ((sum(assessment) >= (SELECT avg(assessment) FROM tasks)) AND (status != 'Closed'));
+--do with having
 
 --2.9
 
@@ -184,12 +190,13 @@ select tasks.header, users.login
 from tasks, users
 where users.login = tasks.whoisdoing;
 
--- соотнесенный подзапрос
-select tasks.header,
-       (select users.login from users where tasks.whoisdoing = users.login)
-from tasks;
-
 -- вложенный подзапрос
 select a.header, b.login from
 	(select header, whoisdoing from tasks) as a, (select login from users) as b
 	where a.whoisdoing = b.login;
+
+-- соотнесенный подзапрос
+select tasks.header,
+       (select users.login from users where tasks.whoisdoing = users.login)
+from tasks;
+--tasks.whoisdoing = 'yy' - не соотнесенный запрос

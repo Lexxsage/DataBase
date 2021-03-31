@@ -91,14 +91,15 @@ UPDATE Tasks
 Set assessment= 26
 where assessment is NULL;
 
-SELECT whoisdoing, sum(assessment) FROM tasks
-	WHERE (assessment >= (SELECT avg(assessment) FROM tasks)) AND (status != 'Closed')
-	GROUP BY whoisdoing;
+SELECT whoisdoing, sum(assessment)
+FROM tasks
+WHERE (assessment >= (SELECT avg(assessment) FROM tasks)) AND (status != 'Closed')
+GROUP BY whoisdoing;
 
 SELECT whoisdoing, sum(assessment)
     FROM tasks
 	GROUP BY whoisdoing, assessment, status
-    HAVING ((sum(assessment) >= (SELECT avg(assessment) FROM tasks)) AND (status != 'Closed'));
+    HAVING (assessment >= (SELECT avg(assessment) FROM tasks) AND (status != 'Closed'));
 --do with having
 
 --2.9

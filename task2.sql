@@ -93,14 +93,14 @@ where assessment is NULL;
 
 SELECT whoisdoing, sum(assessment)
 FROM tasks
-WHERE (assessment >= (SELECT avg(assessment) FROM tasks)) AND (status != 'Closed')
+WHERE (assessment >= (SELECT avg(assessment) FROM tasks))
 GROUP BY whoisdoing;
 
+--do with having
 SELECT whoisdoing, sum(assessment)
     FROM tasks
-	GROUP BY whoisdoing, assessment, status
-    HAVING (assessment >= (SELECT avg(assessment) FROM tasks) AND (status != 'Closed'));
---do with having
+	GROUP BY whoisdoing
+    HAVING (sum(assessment)>=avg(assessment));
 
 --2.9
 

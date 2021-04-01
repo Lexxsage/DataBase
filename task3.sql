@@ -207,7 +207,7 @@ VALUES (1, 'a.devyatovskaya', 'nsu', 'Alexandra', 'hw4','#hw4', 'Олеееж, �
        (6, 'd.bachtenev', 'vki', 'Denis', 'errors', 'errors', 'Да тут нужен ConstraintLayout, вы че', '2021-03-31 19:03:00', 'lections', 'Constraint_layout'),
        (7, 'm.belyi', 'improve group', 'Max', 'office', '#some', 'А че вам тут Олег рассказывает', '2021-04-01 01:45:34', 'office',NULL),
        (8, 'o.lopuchov', 'improve group', 'Oleg', 'hw5', '#hw5', 'Скинул новую домашку, сделать до пятницы', '2021-04-01 04:23:23', 'activity', 'tz5');
---1
+--144
 --а improve просто нет
 select login
 from Task3

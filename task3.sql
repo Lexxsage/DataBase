@@ -203,28 +203,54 @@ VALUES (1, 'a.devyatovskaya', 'nsu', 'Alexandra', 'hw4','#hw4', 'Олеееж, �
        (2, 'd.shonin', 'nsu', 'Dmitry', 'office', '#office', 'Я пришел!!!', '2021-03-31 17:53:56', 'office',NULL),
        (3, 'o.pugacheva', 'vki', 'Oksana','office','#office','А я опоздаю', '2021-03-31 17:59:11', 'office', NULL),
        (4, 'o.lopuchov', 'improve group', 'Oleg', 'hw4', '#hw4', 'Саш, жду до вечера пятницы, потом ругаюсь','2021-03-31 18:48:45', 'recycler_view', 'tz4'),
-       (5, 'd.bogomazov', 'webgroup','Dmitry','lections','#some','Скиньте лекцию по активити','20201-03-31 18:56:03','office',NULL),
+       (5, 'd.bogomazov', 'web group','Dmitry','lections','#some','Скиньте лекцию по активити','20201-03-31 18:56:03','office',NULL),
        (6, 'd.bachtenev', 'vki', 'Denis', 'errors', 'errors', 'Да тут нужен ConstraintLayout, вы че', '2021-03-31 19:03:00', 'lections', 'Constraint_layout'),
        (7, 'm.belyi', 'improve group', 'Max', 'office', '#some', 'А че вам тут Олег рассказывает', '2021-04-01 01:45:34', 'office',NULL),
        (8, 'o.lopuchov', 'improve group', 'Oleg', 'hw5', '#hw5', 'Скинул новую домашку, сделать до пятницы', '2021-04-01 04:23:23', 'activity', 'tz5');
 --144
---а improve просто нет
+--а group несколько
 select login
 from Task3
-where work_place='improve';
+where work_place='group';
 
 --2
 delete from Task3
 where login = 'd.bachtenev';
 
---error - without primary key
-insert into Task3(message)
-values ('В субботу идем в бар');
-
 update Task3
 set event='hw5'
 where event='hw4';
 
-update Task3
-set work_place='yandex'
-where event='improve';
+--аномалия вставки
+create table studentPerformance(
+    number serial,
+    student varchar(50),
+    id_card varchar(4),
+    subject varchar(20),
+    teacher varchar(50),
+    department varchar(25),
+    grade int
+);
+INSERT into studentPerformance(student, id_card, subject, teacher, department, grade)
+values ('Petrov.N.N', 4566, 'Physics', 'Borisov.M.A', 'TeorPhysics', 5),
+        ('Petrov.N.N', 4566, 'Chemistry', 'Svinolupova.N.A', 'NaturalScience', 4),
+       ('Sidorova.T.E', 2730, 'Physics', 'Borisov.M.A', 'TeorPhysics', 5),
+        ('Konovalov.K.S', 1289, 'MedicalStaff', 'Givolupova E.N.', 'MedicalScience', 4);
+--надо добавить в базу нового преподавателя физики, которого недавно приняли
+--Для этого необходимо, чтобы новый преподаватель обязательно оценил хотя бы одного студента.
+--Иначе, в таком представлении базы данных, добавить данные будет невозможно.
+-- Значит, при добавлении преподавателя, нужно выгадывать несуществующие данные оценивания студента
+
+create table studentInfo(
+    number serial PRIMARY KEY,
+    student varchar(100),
+    id_card varchar(4),
+    address varchar(100)
+);
+
+--как вылавливать имя и адрес?
+INSERT INTO studentInfo(student, id_card, address)
+VALUES ('Коновалов Антон Андреевич', '1234', 'ул.Пирогова, д.2, к.4'),
+       ('Анастасия Михеева Андреевна','3747','улица Майская, корпус 3, дом 56'),
+       ('Беркут Михаил','2889','д.33, Ленинский пр., лит.А'),
+       ('Михайловна Катерина Шульц', '7474','пр. Ленинский, д.22');

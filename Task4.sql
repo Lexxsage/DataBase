@@ -81,6 +81,8 @@ select taskid, header, priority, creator from tasks as out
 select t.taskid, t.header, t.priority, t.creator from tasks t right outer join
     (select t2.creator, max(t2.priority) priority from tasks t2 group by t2.creator) as t2 using (priority, creator);
 
+select t.taskid, t.header, t.priority from tasks t left join tasks o on t.creator=o.creator and t.priority < o.priority where o.creator is hull;
+
 --4-3
 select login from users
 	where exists (select * from tasks where tasks.whoisdoing = users.login and priority > 50);
@@ -101,3 +103,6 @@ select distinct  users.login from users
 --4-5
 --synonym?
 select t.header, p.projectName from tasks as t, projects as p;
+
+select p.projectname projects, t.header task from projects p cross join tasks t;
+

@@ -81,7 +81,14 @@ select taskid, header, priority, creator from tasks as out
 select t.taskid, t.header, t.priority, t.creator from tasks t right outer join
     (select t2.creator, max(t2.priority) priority from tasks t2 group by t2.creator) as t2 using (priority, creator);
 
-select t.taskid, t.header, t.priority from tasks t left join tasks o on t.creator=o.creator and t.priority < o.priority where o.creator is hull;
+select t.taskid, t.header, t.priority from tasks t left join tasks o on t.creator=o.creator and t.priority < o.priority where o.creator is null;
+
+SELECT b.taskid, b.header
+FROM tasks AS a,
+     tasks AS b
+WHERE a.creator = b.creator
+GROUP BY b.taskid, a.creator
+HAVING max(a.priority) = b.priority;
 
 --4-3
 select login from users
